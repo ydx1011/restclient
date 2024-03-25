@@ -419,3 +419,24 @@ func (da *digestData) ToString() (string, error) {
 
 	return buf.String(), err
 }
+
+type RecoveryFilter struct {
+	Log xlog.Logger
+}
+
+func NewRecovery(log xlog.Logger) *RecoveryFilter {
+	return &RecoveryFilter{
+		Log: log,
+	}
+}
+
+func (rf *RecoveryFilter) Filter(request *http.Request, fc FilterChain) (resp *http.Response, err error) {
+	defer func() {
+		r := recover()
+		if r != nil && rf.Log != nil {
+			rf.Log.Infoln(r)
+		}
+		err = fmt.Errorf("RestClient panic :%v\n", r)
+	}()
+	return fc.Filter(request)
+}
