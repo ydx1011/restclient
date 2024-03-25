@@ -68,6 +68,10 @@ func NewReadWriteCloser(pool Pool) *ReadWriteCloser {
 	}
 }
 
+func (rc *ReadWriteCloser) Bytes() []byte {
+	return rc.buf.Bytes()
+}
+
 func (rc *ReadWriteCloser) Read(p []byte) (n int, err error) {
 	return rc.buf.Read(p)
 }
