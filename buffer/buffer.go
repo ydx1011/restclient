@@ -109,3 +109,30 @@ func (mrw *MergeReaderWriter) Read(p []byte) (int, error) {
 	_, _ = mrw.w.Write(p[:n])
 	return n, err
 }
+
+type NopReadCloser struct {
+	r   io.Reader
+	len int64
+}
+
+func (rc *NopReadCloser) Read(p []byte) (n int, err error) {
+	return rc.r.Read(p)
+}
+
+func (rc *NopReadCloser) Close() error {
+	return nil
+}
+
+func (rc *NopReadCloser) ContentLength() int64 {
+	return rc.len
+}
+
+func NewReadCloser(d []byte) *NopReadCloser {
+	if d == nil {
+		return nil
+	}
+	return &NopReadCloser{
+		r:   bytes.NewReader(d),
+		len: int64(len(d)),
+	}
+}
