@@ -43,6 +43,7 @@ var (
 		NewStringConverter(),
 		NewXmlConverter(),
 		NewJsonConverter(),
+		NewYamlConverter(),
 	}
 )
 
